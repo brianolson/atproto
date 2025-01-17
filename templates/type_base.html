@@ -1,0 +1,9 @@
+<div class="defd">
+{% if xobject.defidName %}<a name="{{ xobject.defidName }}"></a>{% endif %}
+{% if not suppressType %}<div class="lextype">{{ xobject.type }}</div>{% endif %}
+{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
+{% if xobject.description %}
+<p>{{ xobject.description }}</p>
+{% endif %}
+{% block content %}{% endblock %}
+</div>
