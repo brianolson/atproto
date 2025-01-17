@@ -1,9 +1,5 @@
-<div class="defd"><span class="dhead">Record</span>
-{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
-<div class="lextype">{{ xobject.type }}</div>
-{% if xobject.description %}
-<p>{{ xobject.description }}</p>
-{% endif %}
-  <p><b>Key</b>: {{ key }}</p>
-  {{ xobject.record_html|safe }}
-</div>
+{% extends "type_base.html" %}
+{% block content %}
+<p><b>Key</b>: {{ key }}</p>
+{{ xobject.record_html|safe }}
+{% endblock %}

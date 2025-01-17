@@ -1,7 +1,23 @@
-<div class="defd"><span class="dhead">Subscription</span>
-{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
-<div class="lextype">{{ xobject.type }}</div>
-{% if xobject.description %}
-<p>{{ xobject.description }}</p>
-{% endif %}
+{% extends "type_base.html" %}
+{% block content %}
+{% if xobject.parameters_html %}
+<div class="qparams"><span>parameters:</span>
+  {{ xobject.parameters_html|safe }}
 </div>
+{% endif %}
+{% if xobject.message %}
+<div class="qout"><span>message: </span>
+  {% if xobject.message.description %}<span>{{ xobject.message.description }}</span>{% endif %}
+{% if xobject.message_html %}<div class="procedure_output">{{ xobject.message_html|safe }}</div>{% endif %}
+</div>
+{% endif %}
+{% if xobject.errors %}
+<div class="qerr"><span>errors:</span>
+  <ul>
+    {% for erec in xobject.errors -%}
+    <li><span class="ename">{{ erec.name }}</span>{% if erec.description %} - {{ erec.description }}{% endif %}</li>
+    {%- endfor %}
+  </ul>
+</div>
+{% endif %}
+{% endblock %}

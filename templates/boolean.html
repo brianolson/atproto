@@ -1,4 +1,5 @@
 {% extends "type_base.html" %}
 {% block content %}
 {% if xobject.default %}<span class="obp">default={{ xobject.default }}</span>{% endif %}
+{% if xobject.const %}<span class="obp">const={{ xobject.const }}</span>{% endif %}
 {% endblock %}

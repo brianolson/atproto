@@ -1,7 +1,5 @@
-<div class="defd"><span class="dhead">blob</span>
-{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
-<div class="lextype">{{ type }}</div>
-{% if description %}
-<p>{{ description }}</p>
-{% endif %}
-</div>
+{% extends "type_base.html" %}
+{% block content %}
+{% if xobject.accept %}<span class="obp">accept=[{% for ctype in xobject.accpt %}{% if not loop.first %}, {% endif %}{{ ctype }}{% endfor %}]</span>{% endif %}
+{% if xobject.maxSize %}<span class="obp">maxSize={{ xobject.maxSize }}</span>{% endif %}
+{% endblock %}
