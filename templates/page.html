@@ -15,15 +15,21 @@
   .qerr{padding-left:1em;}
   .oprops{padding-left:1em;}
   .opropn{font-family:monospace;font-size:110%;}
-  .opropv{display:block;background-color:#ffa;padding-left:1em;}
+  .opropv{display:block;padding-left:1em;}
   .qparams .dhead{display:none;}
   .required{font-weight:bold;font-family:monospace;font-size:90%;}
-  .obp{background-color:#eef;}
+  .obp{}
   .pchunk{padding:3px;border: 1px solid #000;}
+  .arritems{padding-left:1em;}
 </style>
 </head>
 <body>
   <h1>{{ title }}</h1>
+  <table>
+    {% for defid, defidName, kind in toc -%}
+<tr><td class="tocKind">{{ kind }}</td><td><a href="#{{ defidName }}">{{ defid }}</a></td></tr>
+    {%- endfor %}
+    </table>
   {% for chunk in chunks %}
   <div class="pchunk">
     {{ chunk|safe }}

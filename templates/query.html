@@ -1,21 +1,24 @@
-<div class="defd"><span class="dhead">Query</span>
-<div class="lextype">{{ xobject.type }}</div>
-{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
-{% if xobject.description %}
-<p>{{ xobject.description }}</p>
-{% endif %}
+{% extends "type_base.html" %}
+{% block content %}
 {% if xobject.parameters_html %}
 <div class="qparams"><span>parameters:</span>
   {{ xobject.parameters_html|safe }}
 </div>
 {% endif %}
-{% if xobject.output_html %}
-<div class="qout"><span>output:</span>
-  {{ xobject.output_html|safe }}
+{% if xobject.output %}
+<div class="qout"><span>output: </span>
+  {% if xobject.output.description %}<span>{{ xobject.output.description }}</span>{% endif %}
+  <div>encoding: <span class="enc">{{ xobject.output.encoding }}</span></div>
+{% if xobject.output_html %}<div class="procedure_output">{{ xobject.output_html|safe }}</div>{% endif %}
 </div>
 {% endif %}
 {% if xobject.errors %}
 <div class="qerr"><span>errors:</span>
+  <ul>
+    {% for erec in xobject.errors -%}
+    <li><span class="ename">{{ erec.name }}</span>{% if erec.description %} - {{ erec.description }}{% endif %}</li>
+    {%- endfor %}
+  </ul>
 </div>
 {% endif %}
-</div>
+{% endblock %}

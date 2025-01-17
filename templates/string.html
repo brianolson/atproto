@@ -1,10 +1,5 @@
-<div class="defd"><span class="dhead">string</span>
-<div class="lextype">{{ xobject.type }}</div>
-{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
-{% if xobject.description %}
-<p>{{ xobject.description }}</p>
-{% endif %}
-</div>
+{% extends "type_base.html" %}
+{% block content %}
 {% if xobject.format %}<span class="obp">format={{ xobject.format }}</span>{% endif %}
 {% if xobject.minLength %}<span class="obp">minLength={{ xobject.minLength }}</span>{% endif %}
 {% if xobject.maxLength %}<span class="obp">maxLength={{ xobject.maxLength }}</span>{% endif %}
@@ -14,3 +9,4 @@
 {% if xobject.enum %}<span class="obp">enum={{ xobject.enum }}</span>{% endif %}
 {% if xobject.default %}<span class="obp">default={{ xobject.default }}</span>{% endif %}
 {% if xobject.const %}<span class="obp">const={{ xobject.const }}</span>{% endif %}
+{% endblock %}

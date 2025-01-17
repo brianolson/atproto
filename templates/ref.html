@@ -1,7 +1,8 @@
 <div class="defd"><span class="dhead">ref</span>
-{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
 <div class="lextype">{{ type }}</div>
+{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
 {% if description %}
 <p>{{ description }}</p>
 {% endif %}
+{% if xobject.ref %}<a class="obp" href="#{{ xobject.refName }}">ref={{ xobject.ref }}</a>{% endif %}
 </div>

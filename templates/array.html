@@ -4,7 +4,7 @@
 {% if xobject.description %}
 <p>{{ xobject.description }}</p>
 {% endif %}
-{% if xobject.items_html %}<span class="obp">items={{ xobject.items_html }}</span>{% endif %}
+{% if xobject.items_html %}<div class="obp">items=<div class="arritems">{{ xobject.items_html }}</div></div>{% endif %}
 {% if xobject.minLength %}<span class="obp">minLength={{ xobject.minLength }}</span>{% endif %}
 {% if xobject.maxLength %}<span class="obp">maxLength={{ xobject.maxLength }}</span>{% endif %}
 </div>

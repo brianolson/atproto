@@ -1,7 +1,4 @@
-<div class="defd"><span class="dhead">Boolean</span>
-{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
-<div class="lextype">{{ type }}</div>
-{% if description %}
-<p>{{ description }}</p>
-{% endif %}
-</div>
+{% extends "type_base.html" %}
+{% block content %}
+{% if xobject.default %}<span class="obp">default={{ xobject.default }}</span>{% endif %}
+{% endblock %}

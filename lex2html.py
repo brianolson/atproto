@@ -78,6 +78,19 @@ def pathget(d, *args):
             return None
     return d
 
+def refToAbsoluteRef(ref, lastdefid):
+    if ref[0] == '#':
+        if '#' in lastdefid:
+            root, rest = lastdefid.split('#')
+            ref = root + ref
+        else:
+            ref = lastdefid + ref
+    return ref
+
+def defidToFragment(defid):
+    # com.atproto.server.createAppPassword#appPassword -> com.atproto.server.createAppPassword_appPassword
+    return defid.replace('#', '_')
+
 class LexSet:
     def __init__(self, args):
         self.args = args
@@ -87,6 +100,8 @@ class LexSet:
         self.idToDef = {}
         self.outsets = {}
         self.allchunks = []
+        self.allrefs = []
+        self.defidstack = []
 
     def addPath(self, fpath):
         # do a quick first read of a lexicon file
@@ -167,9 +182,10 @@ class LexSet:
                 logger.error("%s: %s unknown sub field %r", fpath, defid, k)
                 return False
         defo['defid'] = defid
+        defo['defidName'] = defidToFragment(defid)
         self.idToDef[defid] = defo
         return True
-    def recHtmlSubfield(self, lexrec, hlevel, k, path=None):
+    def recHtmlSubfield(self, lexrec, hlevel, k, path=None, **kwargs):
         if path is not None:
             subf = pathget(lexrec, *path)
         else:
@@ -177,42 +193,70 @@ class LexSet:
         if subf is None:
             return
         try:
-            html = self.renderRec(subf)
+            html = self.renderRec(subf, **kwargs)
         except Exception as e:
             raise Exception(f"subfield {k!r} failed: {e}")
         lexrec[k+'_html'] = html
-    def renderRec(self, lexrec, hlevel=2, required=None):
+    def renderRec(self, lexrec, hlevel=2, **kwargs):
+        defid = lexrec.get('defid')
+        if defid:
+            self.defidstack.append(defid)
         rectype = lexrec['type']
         recTmpl = je.get_template(rectype+".html")
         # recursion step, render sub-objects to {foo}_html
         if rectype == 'query':
-            self.recHtmlSubfield(lexrec, hlevel+1, 'parameters')
-            self.recHtmlSubfield(lexrec, hlevel+1, 'output', path=('output', 'schema'))
+            self.recHtmlSubfield(lexrec, hlevel+1, 'parameters', suppressType=True)
+            self.recHtmlSubfield(lexrec, hlevel+1, 'output', path=('output', 'schema'), suppressType=True)
         elif rectype == 'record':
             self.recHtmlSubfield(lexrec, hlevel+1, 'record')
         elif rectype == 'procedure':
-            self.recHtmlSubfield(lexrec, hlevel+1, 'parameters')
-            self.recHtmlSubfield(lexrec, hlevel+1, 'input', path=('input', 'schema'))
-            self.recHtmlSubfield(lexrec, hlevel+1, 'output', path=('output', 'schema'))
+            self.recHtmlSubfield(lexrec, hlevel+1, 'parameters', suppressType=True)
+            self.recHtmlSubfield(lexrec, hlevel+1, 'input', path=('input', 'schema'), suppressType=True)
+            self.recHtmlSubfield(lexrec, hlevel+1, 'output', path=('output', 'schema'), suppressType=True)
         elif rectype == 'subscription':
-            self.recHtmlSubfield(lexrec, hlevel+1, 'parameters')
-            self.recHtmlSubfield(lexrec, hlevel+1, 'message', path=('message', 'schema'))
+            self.recHtmlSubfield(lexrec, hlevel+1, 'parameters', suppressType=True)
+            self.recHtmlSubfield(lexrec, hlevel+1, 'message', path=('message', 'schema'), suppressType=True)
         elif rectype == 'array':
             self.recHtmlSubfield(lexrec, hlevel+1, 'items')
         elif rectype == 'object':
             xrequired = lexrec.get('required', [])
+            xnullable = lexrec.get('nullable', [])
             properties = lexrec.get('properties')
             if properties:
-                lexrec['properties_html'] = {k:self.renderRec(v,hlevel+1,required=(k in xrequired)) for k,v in properties.items()}
+                ph = {}
+                for k,v in properties.items():
+                    html = self.renderRec(v,hlevel+1)
+                    if k in xrequired:
+                        html = '<span class="required">required</span> ' + html
+                    if k in xnullable:
+                        html = '<span class="nullable">nullable</span> ' + html
+                    ph[k] = html
+                lexrec['properties_html'] = ph
         elif rectype == 'params':
             xrequired = lexrec.get('required', [])
             properties = lexrec.get('properties')
             if properties:
-                lexrec['properties_html'] = {k:self.renderRec(v,hlevel+1,required=(k in xrequired)) for k,v in properties.items()}
-        html = recTmpl.render({"xobject":lexrec, "hlevel":hlevel})
-        if required:
-            # TODO: this is weird; find a better way to blend this into object and params properties
-            html = '<span class="required">required</span> ' + html
+                ph = {}
+                for k,v in properties.items():
+                    html = self.renderRec(v,hlevel+1)
+                    if k in xrequired:
+                        html = '<span class="required">required</span> ' + html
+                    ph[k] = html
+                lexrec['properties_html'] = ph
+        elif rectype == 'ref':
+            ref = lexrec['ref']
+            ref = refToAbsoluteRef(ref, self.defidstack[-1])
+            lexrec['refName'] = defidToFragment(ref)
+        elif rectype == 'union':
+            refs = lexrec['refs']
+            refs_html = [(ref, defidToFragment(refToAbsoluteRef(ref, self.defidstack[-1]))) for ref in refs]
+            lexrec['refs_html'] = refs_html
+        rdict = dict(kwargs)
+        rdict["xobject"] = lexrec
+        rdict["hlevel"] = hlevel
+        html = recTmpl.render(rdict)
+        if defid:
+            self.defidstack.pop()
         return html
     def renderHtml(self):
         if self.args.out == "":
@@ -231,8 +275,9 @@ class LexSet:
                     fout.write(html)
 
         # make all.html
+        self.allrefs.sort()
         pageTmpl = je.get_template('page.html')
-        html = pageTmpl.render({"title":"all lexicons", "chunks":self.allchunks})
+        html = pageTmpl.render({"title":"all lexicons", "chunks":self.allchunks, "toc": self.allrefs})
         outpath = os.path.join(self.args.out, 'all.html')
         os.makedirs(os.path.dirname(outpath), exist_ok=True)
         logger.info("%9d %s", len(html), outpath)
@@ -240,6 +285,7 @@ class LexSet:
             fout.write(html)
     def renderHtmlPage(self, fpath, xrec):
         chunks = []
+        refs = []
         for defid, defo in xrec['defs']:
             #chunkTmpl = je.get_template(defo['type']+".html")
             #rdict = {"object":defo, "hlevel": 2}
@@ -248,10 +294,14 @@ class LexSet:
                 chunkHtml = self.renderRec(defo)
             except Exception as e:
                 raise Exception(f"{fpath} {defid} failed: {e}")
+            ref = (defid, defo['defidName'], defo['type'])
+            refs.append(ref)
+            self.allrefs.append(ref)
             chunks.append(chunkHtml)
             self.allchunks.append(chunkHtml)
         pageTmpl = je.get_template('page.html')
-        return pageTmpl.render({"title":xrec["id"], "chunks":chunks})
+        refs.sort()
+        return pageTmpl.render({"title":xrec["id"], "chunks":chunks, "toc": refs})
 
 if __name__ == '__main__':
     import argparse
