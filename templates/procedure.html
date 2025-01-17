@@ -1,0 +1,37 @@
+{# {% from 'procedure_macro.html' import procedure %}
+{{ procedure(object, hlevel) }} #}
+<div class="defd"><span class="dhead">Procedure</span>
+{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
+<div class="lextype">{{ xobject.type }}</div>
+{% if xobject.description %}
+<p>{{ xobject.description }}</p>
+{% endif %}
+{% if xobject.parameters_html %}
+<div><span>parameters: </span>
+<div class="qparams">{{ xobject.parameters_html|safe }}</div>
+</div>
+{% endif %}
+{% if xobject.input_html %}
+<div class="qin"><span>input: </span>{% if xobject.input.description %}<span>{{ xobject.input.description }}</span>{% endif %}
+  <div>encoding: <span class="enc">{{ xobject.input.encoding }}</span></div>
+<div class="procedure_input">{{ xobject.input_html|safe }}</div>
+  {#
+  {% if xobject.input.schema %}
+  {% if xobject.input.schema.type == 'object' %}
+  {{ object(xobject.input.schema, hlevel+1) }}
+  {% endif %}
+  {% endif %}
+  {{ object(xobject.input, hlevel+1) }} #}
+</div>
+{% endif %}
+{% if xobject.output %}
+<div class="qout"><span>output: </span>
+<div class="procedure_output">{{ xobject.output_html|safe }}</div>
+{#   {{ object(xobject.output, hlevel+1) }} #}
+</div>
+{% endif %}
+{% if xobject.errors %}
+<div class="qerr"><span>errors: </span>
+</div>
+{% endif %}
+</div>

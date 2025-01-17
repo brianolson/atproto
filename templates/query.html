@@ -1,0 +1,21 @@
+<div class="defd"><span class="dhead">Query</span>
+<div class="lextype">{{ xobject.type }}</div>
+{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
+{% if xobject.description %}
+<p>{{ xobject.description }}</p>
+{% endif %}
+{% if xobject.parameters_html %}
+<div class="qparams"><span>parameters:</span>
+  {{ xobject.parameters_html|safe }}
+</div>
+{% endif %}
+{% if xobject.output_html %}
+<div class="qout"><span>output:</span>
+  {{ xobject.output_html|safe }}
+</div>
+{% endif %}
+{% if xobject.errors %}
+<div class="qerr"><span>errors:</span>
+</div>
+{% endif %}
+</div>

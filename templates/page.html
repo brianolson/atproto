@@ -1,0 +1,33 @@
+{# {% from 'any_macro.html' import object %} #}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{{ title }}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  .defd{/*padding:3px;border:1px solid #000;*/}
+  .dhead{font-style:italic;display:none;}
+  .lextype{font-family:monospace;}
+  .qparams{padding-left:1em;}
+  .qin{padding-left:1em;}
+  .qout{padding-left:1em;}
+  .qerr{padding-left:1em;}
+  .oprops{padding-left:1em;}
+  .opropn{font-family:monospace;font-size:110%;}
+  .opropv{display:block;background-color:#ffa;padding-left:1em;}
+  .qparams .dhead{display:none;}
+  .required{font-weight:bold;font-family:monospace;font-size:90%;}
+  .obp{background-color:#eef;}
+  .pchunk{padding:3px;border: 1px solid #000;}
+</style>
+</head>
+<body>
+  <h1>{{ title }}</h1>
+  {% for chunk in chunks %}
+  <div class="pchunk">
+    {{ chunk|safe }}
+  </div>
+  {% endfor %}
+</body>
+</html>

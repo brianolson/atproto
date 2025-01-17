@@ -1,0 +1,16 @@
+<div class="defd"><span class="dhead">string</span>
+<div class="lextype">{{ xobject.type }}</div>
+{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
+{% if xobject.description %}
+<p>{{ xobject.description }}</p>
+{% endif %}
+</div>
+{% if xobject.format %}<span class="obp">format={{ xobject.format }}</span>{% endif %}
+{% if xobject.minLength %}<span class="obp">minLength={{ xobject.minLength }}</span>{% endif %}
+{% if xobject.maxLength %}<span class="obp">maxLength={{ xobject.maxLength }}</span>{% endif %}
+{% if xobject.minGraphemes %}<span class="obp">minGraphemes={{ xobject.minGraphemes }}</span>{% endif %}
+{% if xobject.maxGraphemes %}<span class="obp">maxGraphemes={{ xobject.maxGraphemes }}</span>{% endif %}
+{% if xobject.knownValues %}<span class="obp">knownValues={{ xobject.knownValues }}</span>{% endif %}
+{% if xobject.enum %}<span class="obp">enum={{ xobject.enum }}</span>{% endif %}
+{% if xobject.default %}<span class="obp">default={{ xobject.default }}</span>{% endif %}
+{% if xobject.const %}<span class="obp">const={{ xobject.const }}</span>{% endif %}

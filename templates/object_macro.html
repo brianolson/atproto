@@ -1,0 +1,18 @@
+{% macro object(xobject, hlevel) -%}
+<div class="defd"><span class="dhead">Object</span>
+<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>
+<div class="lextype">{{ xobject.type }}</div>
+{% if xobject.description %}
+<p>{{ xobject.description }}</p>
+{% endif %}
+{% if xobject.properties %}
+(
+{% for name, prop in xobject.properties.items() %}
+{{ name }},
+{% endfor %}
+)
+{% else %}
+()
+{% endif %}
+</div>
+{%- endmacro %}

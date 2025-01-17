@@ -1,0 +1,10 @@
+<div class="defd">{# <span class="dhead">array</span> #}
+<div class="lextype">{{ xobject.type }}</div>
+{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
+{% if xobject.description %}
+<p>{{ xobject.description }}</p>
+{% endif %}
+{% if xobject.items_html %}<span class="obp">items={{ xobject.items_html }}</span>{% endif %}
+{% if xobject.minLength %}<span class="obp">minLength={{ xobject.minLength }}</span>{% endif %}
+{% if xobject.maxLength %}<span class="obp">maxLength={{ xobject.maxLength }}</span>{% endif %}
+</div>

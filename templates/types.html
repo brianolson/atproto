@@ -1,0 +1,12 @@
+{% from 'object_macro.html' import object %}
+{% macro record(xrecord, hlevel) -%}
+<div class="defd"><span class="dhead">Record</span>
+<h{{ hlevel }}>{{ defid }}</h{{ hlevel }}>
+<div class="lextype">{{ type }}</div>
+{% if description %}
+<p>{{ description }}</p>
+{% endif %}
+<p><b>Key</b>: {{ key }}</p>
+{% object(record, hlevel + 1) %}
+</div>
+{%- endmacro %}

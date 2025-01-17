@@ -1,0 +1,15 @@
+<div class="defd"><span class="dhead">params</span>
+<div class="lextype">{{ xobject.type }}</div>
+{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
+{% if xobject.description %}
+<p>{{ xobject.description }}</p>
+{% endif %}
+{% if xobject.properties_html %}
+<div class="oprops">
+{% for pname, phtml in xobject.properties_html.items() %}
+<div class="oprop"><span class="opropn">{{ pname }}</span><span class="opropv">{{ phtml|safe }}</span></div>
+{% endfor %}
+</div>
+{% endif %}
+{% if xobject.required %}<span class="obp">required={{ xobject.required }}</span>{% endif %}
+</div>

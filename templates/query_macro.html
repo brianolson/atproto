@@ -1,0 +1,30 @@
+{% from 'object_macro.html' import object %}
+{% macro query(xobject, hlevel) -%}
+<div class="defd"><span class="dhead">Query</span>
+<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>
+<div class="lextype">{{ xobject.type }}</div>
+{% if xobject.description %}
+<p>{{ xobject.description }}</p>
+{% endif %}
+{% if xobject.parameters %}
+<div><span>parameters: </span>
+  {{ object(xobject.parameters, hlevel+1) }}
+</div>
+{% endif %}
+{% if xobject.input %}
+<div><span>input: </span>
+  {{ object(xobject.input, hlevel+1) }}
+</div>
+{% endif %}
+{% if xobject.output %}
+<div><span>output: </span>
+  {{ object(xobject.output, hlevel+1) }}
+</div>
+{% endif %}
+{% if xobject.errors %}
+<div><span>errors: </span>
+  {{ object(xobject.errors, hlevel+1) }}
+</div>
+{% endif %}
+</div>
+{%- endmacro %}

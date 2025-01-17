@@ -1,0 +1,12 @@
+<div class="defd"><span class="dhead">integer</span>
+{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
+<div class="lextype">{{ xobject.type }}</div>
+{% if xobject.description %}
+<p>{{ xobject.description }}</p>
+{% endif %}
+{% if xobject.minimum %}<span class="obp">minimum={{ xobject.minimum }}</span>{% endif %}
+{% if xobject.maximum %}<span class="obp">maximum={{ xobject.maximum }}</span>{% endif %}
+{% if xobject.enum %}<span class="obp">enum={{ xobject.enum }}</span>{% endif %}
+{% if xobject.default %}<span class="obp">default={{ xobject.default }}</span>{% endif %}
+{% if xobject.const %}<span class="obp">const={{ xobject.const }}</span>{% endif %}
+</div>

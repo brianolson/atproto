@@ -1,0 +1,19 @@
+<div class="defd"><span class="dhead">Object</span>
+{% if xobject.defid %}<h{{ hlevel }}>{{ xobject.defid }}</h{{ hlevel }}>{% endif %}
+<div class="lextype">{{ xobject.type }}</div>
+{% if xobject.description %}
+<p>{{ xobject.description }}</p>
+{% endif %}
+{% if xobject.properties_html %}
+<div class="oprops">
+{% for pname, phtml in xobject.properties_html.items() %}
+<div class="oprop"><span class="opropn">{{ pname }}</span><span class="opropv">{{ phtml|safe }}</span></div>
+{% endfor %}
+</div>
+{% else %}
+()
+{% endif %}
+{# TODO: merge required and nullable into each property description #}
+{% if xobject.required %}<span class="obp">required={{ xobject.required }}</span>{% endif %}
+{% if xobject.nullable %}<span class="obp">nullable={{ xobject.nullable }}</span>{% endif %}
+</div>
