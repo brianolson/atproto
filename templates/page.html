@@ -21,19 +21,28 @@
   .obp{}
   .pchunk{padding:3px;border: 1px solid #000;}
   .arritems{padding-left:1em;}
+  .tocK{font-family:monospace;}
+  .hidden{display:none;}
+  .tocRow{}
 </style>
 </head>
 <body>
   <h1>{{ title }}</h1>
-  <table>
+  <p>This is documentation of objects and APIs specified by an <a href="https://atproto.com/specs/lexicon">atproto lexicon as defined here.</a></p>
+  <p id="filterset">Show:
+    <span class="filter"><input type="checkbox" name="filterAll" checked> All</span>
+    <span class="filter"><input type="checkbox" name="filterAPI"> APIs</span>
+    <span class="filter"><input type="checkbox" name="filterData"> Data</span></p>
+  <table id="toc">
     {% for defid, defidName, kind in toc -%}
-<tr><td class="tocKind">{{ kind }}</td><td><a href="#{{ defidName }}">{{ defid }}</a></td></tr>
+<tr class="tocRow" data-k="{{ kind }}"><td class="tocK">{{ kind }}</td><td class="tocV"><a href="#{{ defidName }}">{{ defid }}</a></td></tr>
     {%- endfor %}
-    </table>
+  </table>
   {% for chunk in chunks %}
   <div class="pchunk">
     {{ chunk|safe }}
   </div>
   {% endfor %}
+  <script src="lexdoc.js"></script>
 </body>
 </html>

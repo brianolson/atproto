@@ -276,8 +276,10 @@ class LexSet:
 
         # make all.html
         self.allrefs.sort()
+        self.allchunks.sort()
+        allchunks = [xc for (_, xc) in self.allchunks]
         pageTmpl = je.get_template('page.html')
-        html = pageTmpl.render({"title":"all lexicons", "chunks":self.allchunks, "toc": self.allrefs})
+        html = pageTmpl.render({"title":"all lexicons", "chunks":allchunks, "toc": self.allrefs})
         outpath = os.path.join(self.args.out, 'all.html')
         os.makedirs(os.path.dirname(outpath), exist_ok=True)
         logger.info("%9d %s", len(html), outpath)
@@ -297,10 +299,12 @@ class LexSet:
             ref = (defid, defo['defidName'], defo['type'])
             refs.append(ref)
             self.allrefs.append(ref)
-            chunks.append(chunkHtml)
-            self.allchunks.append(chunkHtml)
+            chunks.append((defid,chunkHtml))
+            self.allchunks.append((defid,chunkHtml))
         pageTmpl = je.get_template('page.html')
         refs.sort()
+        chunks.sort()
+        chunks = [xc for (_, xc) in chunks]
         return pageTmpl.render({"title":xrec["id"], "chunks":chunks, "toc": refs})
 
 if __name__ == '__main__':
