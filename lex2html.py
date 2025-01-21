@@ -102,6 +102,13 @@ class LexSet:
         self.allchunks = []
         self.allrefs = []
         self.defidstack = []
+        self.js_text = ''
+
+    def getJs(self):
+        if not self.js_text:
+            with open(os.path.join('templates', 'lexdoc.js'), 'rt') as fin:
+                self.js_text = fin.read()
+        return self.js_text
 
     def addPath(self, fpath):
         # do a quick first read of a lexicon file
@@ -279,7 +286,10 @@ class LexSet:
         self.allchunks.sort()
         allchunks = [xc for (_, xc) in self.allchunks]
         pageTmpl = je.get_template('page.html')
-        html = pageTmpl.render({"title":"all lexicons", "chunks":allchunks, "toc": self.allrefs})
+        rcontext = {"title":"all lexicons", "chunks":allchunks, "toc": self.allrefs}
+        if self.args.inline_js:
+            rcontext['inlinejs'] = self.getJs()
+        html = pageTmpl.render(rcontext)
         outpath = os.path.join(self.args.out, 'all.html')
         os.makedirs(os.path.dirname(outpath), exist_ok=True)
         logger.info("%9d %s", len(html), outpath)
@@ -305,7 +315,10 @@ class LexSet:
         refs.sort()
         chunks.sort()
         chunks = [xc for (_, xc) in chunks]
-        return pageTmpl.render({"title":xrec["id"], "chunks":chunks, "toc": refs})
+        rcontext = {"title":xrec["id"], "chunks":chunks, "toc": refs}
+        if self.args.inline_js:
+            rcontext['inlinejs'] = self.getJs()
+        return pageTmpl.render(rcontext)
 
 if __name__ == '__main__':
     import argparse
@@ -313,6 +326,7 @@ if __name__ == '__main__':
     ap.add_argument('paths', nargs='*', help='files to read and dirs to crawl for lexicon json; default to searching ./')
     ap.add_argument('-o', '--out', default='html', help='name of directory to output to, default ./html/')
     ap.add_argument('--all-only', action='store_true')
+    ap.add_argument('--inline-js', action='store_true')
     ap.add_argument('--verbose', action='store_true')
     args = ap.parse_args()
 

@@ -43,6 +43,10 @@
     {{ chunk|safe }}
   </div>
   {% endfor %}
+  {% if inlinejs %}
+  <script>{{ inlinejs|safe }}</script>
+  {% else %}
   <script src="lexdoc.js"></script>
+  {% endif %}
 </body>
 </html>
