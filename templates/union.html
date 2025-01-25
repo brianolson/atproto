@@ -3,7 +3,7 @@
 {% if xobject.closed %}<span class="obp">closed={{ xobject.closed }}</span>{% endif %}
 <ul>
 {% for ref, refName in xobject.refs_html -%}
-<li><a href="{{ refName }}">{{ ref }}</a></li>
+<li><a href="#{{ refName }}">{{ ref }}</a></li>
 {%- endfor %}
 </ul>
 {% endblock %}
